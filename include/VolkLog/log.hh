@@ -15,7 +15,7 @@
 #include <string_view>
 #include <thread>
 
-namespace Volk::Log {
+namespace volk::log {
 
 enum class Level {
     Trace,
@@ -178,4 +178,4 @@ struct Logger {
     void error(std::format_string<Args...> fmt, Args&&... args) const { log(Level::Error, fmt, std::forward<Args>(args)...); }
 };
 
-} // namespace Volk::Log
+} // namespace volk::log
