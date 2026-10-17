@@ -92,9 +92,9 @@ auto make_logged_callable(const char* component, F&& f) {
         try {
             std::invoke(f, std::forward<decltype(args)>(args)...);
         } catch (const std::exception& e) {
-            emit(Level::Error, component, std::format("unhandled exception: {}", e.what()));
+            emit(Level::Error, component, std::format("Unhandled exception ({}).", e.what()));
         } catch (...) {
-            emit(Level::Error, component, "unhandled unknown exception");
+            emit(Level::Error, component, "Unhandled unknown exception.");
         }
     };
 }
@@ -103,13 +103,13 @@ auto make_logged_callable(const char* component, F&& f) {
 namespace detail {
     constexpr std::string_view exception_name(DWORD code) noexcept {
         switch (code) {
-            case EXCEPTION_ACCESS_VIOLATION:      return "access violation";
-            case EXCEPTION_STACK_OVERFLOW:        return "stack overflow";
-            case EXCEPTION_ILLEGAL_INSTRUCTION:   return "illegal instruction";
-            case EXCEPTION_INT_DIVIDE_BY_ZERO:    return "integer divide by zero";
-            case EXCEPTION_INT_OVERFLOW:          return "integer overflow";
-            case EXCEPTION_ARRAY_BOUNDS_EXCEEDED: return "array bounds exceeded";
-            default:                              return "unknown exception";
+            case EXCEPTION_ACCESS_VIOLATION:      return "Access violation";
+            case EXCEPTION_STACK_OVERFLOW:        return "Stack overflow";
+            case EXCEPTION_ILLEGAL_INSTRUCTION:   return "Illegal instruction";
+            case EXCEPTION_INT_DIVIDE_BY_ZERO:    return "Integer divide by zero";
+            case EXCEPTION_INT_OVERFLOW:          return "Integer overflow";
+            case EXCEPTION_ARRAY_BOUNDS_EXCEEDED: return "Array bounds exceeded";
+            default:                              return "Unknown exception";
         }
     }
 }
@@ -121,9 +121,9 @@ inline void install_crash_handler() {
 
         if (code == EXCEPTION_ACCESS_VIOLATION) {
             const auto access_addr = ep->ExceptionRecord->ExceptionInformation[1];
-            emit(Level::Error, "crash", std::format("access violation at {:#x} accessing {:#x}", addr, access_addr));
+            emit(Level::Error, "crash", std::format("Access violation at {:#x} accessing {:#x}.", addr, access_addr));
         } else {
-            emit(Level::Error, "crash", std::format("{} at {:#x}", detail::exception_name(code), addr));
+            emit(Level::Error, "crash", std::format("{} at {:#x}.", detail::exception_name(code), addr));
         }
 
         return EXCEPTION_CONTINUE_SEARCH;
